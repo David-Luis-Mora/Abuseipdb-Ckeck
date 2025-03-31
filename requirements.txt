@@ -1,0 +1,6 @@
+pandas
+requests
+rich
+termcolor
+openpyxl
+pyQt6
