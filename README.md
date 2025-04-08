@@ -3,7 +3,18 @@
 ### Instalar las dependencias
 pip install -r requirements.txt
 
+#### Formatos de los archivos de entrada
+
+### Ip.txt
+
+134.199.163.187
+170.64.173.208
+
+### excluded_domains.txt
+dormir.com
+pepe.com
+
 ### Ejecutar el script
-python script.py archivo_de_entradas.txt resultado.csv
+python script.py Ip.txt resultado.csv excluded_domains.txt 
 
 
