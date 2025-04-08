@@ -8,10 +8,12 @@ pip install -r requirements.txt
 ### Ip.txt
 
 134.199.163.187
+
 170.64.173.208
 
 ### excluded_domains.txt
 dormir.com
+
 pepe.com
 
 ### Ejecutar el script
