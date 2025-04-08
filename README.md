@@ -3,7 +3,7 @@
 ### Instalar las dependencias
 pip install -r requirements.txt
 
-#### Formatos de los archivos de entrada
+#### Formatos de los archivos de entradas
 
 ### Ip.txt
 
