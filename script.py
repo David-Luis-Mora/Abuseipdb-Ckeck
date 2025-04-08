@@ -34,11 +34,18 @@ def get_ip_report(ip):
         console.print(f"[red]Error al obtener los datos para {ip}[/red]")
         return None
 
+# Función para leer los dominios desde un archivo de texto
+def read_excluded_domains(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            domains = [line.strip() for line in file.readlines() if line.strip()]
+        return domains
+    except FileNotFoundError:
+        console.print(f"[red]El archivo de dominios excluidos no se encontró: {file_path}[/red]")
+        return []
+
 # Función para procesar las IPs desde un archivo de texto
-def process_ips(input_file, output_file):
-    # Si quieres excluir dominios específicos de las IPs
-    DOMAIN = ['google.com','amazon.com']  # Puedes agregar dominios aquí que desees excluir
-    
+def process_ips(input_file, output_file, excluded_domains):
     with open(input_file, 'r') as f:
         ips = [line.strip() for line in f.readlines()]
 
@@ -56,16 +63,11 @@ def process_ips(input_file, output_file):
                 
                 if report:
                     data = report.get('data', {})
-                    print(data)
                     domain = data.get('domain', '')  # Tomamos 'domain' o una cadena vacía
                     
                     if domain:  # Verificamos si 'domain' no es None ni vacío
                         # Comprobamos si el dominio está en la lista de dominios excluidos
-                        count = 0
-                        for j in DOMAIN:
-                            if j in domain:
-                                count += 1
-                        if count == 0:  # Si no se encuentra ningún dominio excluido
+                        if not any(excluded_domain in domain for excluded_domain in excluded_domains):
                             writer.writerow({
                                 'IP': ip
                             })
@@ -85,10 +87,14 @@ def main():
     parser = argparse.ArgumentParser(description="Procesar IPs con la API de AbuseIPDB.")
     parser.add_argument('input_file', help="Archivo de texto con las IPs a verificar.")
     parser.add_argument('output_file', help="Archivo CSV donde se guardarán los resultados.")
+    parser.add_argument('excluded_domains_file', help="Archivo de texto con los dominios a excluir.")
     args = parser.parse_args()
 
+    # Leer los dominios excluidos desde el archivo proporcionado
+    excluded_domains = read_excluded_domains(args.excluded_domains_file)
+
     # Procesar las IPs
-    process_ips(args.input_file, args.output_file)
+    process_ips(args.input_file, args.output_file, excluded_domains)
 
 if __name__ == "__main__":
     main()
